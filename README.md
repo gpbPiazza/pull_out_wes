@@ -38,7 +38,12 @@ depositing it into WES so that everyone is blessed.
 ## Message style
 
 - **Webhook display name:** `WES 🗿` (enforced by the workflow via the `username` field, so it stays consistent regardless of Discord-side settings). Suggested avatar: a moai / statue image.
-- **Language:** Portuguese.
+- **Language:** Portuguese (pt-BR).
+- **Direction:** Always aggressive toward WES. The messages humiliate, insult, and mock him — that aggression *is* the ritual deposit of negativity. No content limits; full Brazilian profanity allowed. Craft rule: cleverness first, vulgarity as a tool.
 - **Tone (alternates by day of month):**
-  - **Odd day** → solemn / ritualistic (a prayer or invocation to WES).
-  - **Even day** → humorous / irreverent (inside-joke energy, playful, lightly absurd).
+  - **Odd day** → mock-solemn ritualistic curse (formal, prayer-shaped, every line invoking WES's worthlessness).
+  - **Even day** → casual humiliation roast (boteco-style direct insults, conversational).
+- **Special-case days** (override the parity rule):
+  - Brazilian holidays: Ano Novo, Dia do Trabalhador, Dia dos Namorados, Finados, Natal, Réveillon, Sexta-feira 13.
+  - Mondays get their own pool.
+- See [`docs/superpowers/specs/2026-06-25-daily-wes-message-generation-design.md`](docs/superpowers/specs/2026-06-25-daily-wes-message-generation-design.md) for the full design.
