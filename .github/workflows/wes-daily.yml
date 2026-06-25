@@ -1,0 +1,35 @@
+name: Daily WES Message
+
+on:
+  # 09:00 America/Sao_Paulo (BRT, UTC-3) -> 12:00 UTC.
+  # Note: GitHub cron is best-effort and may run 5-15 minutes late.
+  schedule:
+    - cron: '0 12 * * *'
+  # Allow manual runs from the Actions tab for testing.
+  workflow_dispatch:
+
+jobs:
+  send-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pick mock message based on day parity
+        id: pick
+        run: |
+          DAY=$(TZ=America/Sao_Paulo date +%-d)
+          if [ $((DAY % 2)) -eq 1 ]; then
+            MESSAGE="[TESTE - dia ímpar | solene] Ó WES, vaso sagrado, recebe hoje aquilo que não nos serve. Que o teu silêncio de pedra absorva o peso, e que a tua bênção alcance a todos. 🗿"
+          else
+            MESSAGE="[TESTE - dia par | humorado] E aí WES, bonitão, segura essa pra gente que hoje tá pesado. Valeu, parceiro. 🗿"
+          fi
+          {
+            echo "message<<EOF"
+            echo "$MESSAGE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Send to Discord
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          username: 'WES 🗿'
+          content: ${{ steps.pick.outputs.message }}
