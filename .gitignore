@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Subagent-driven-development scratch (controller-only — briefs, reports,
+# review packages, progress ledger). Not project content.
+.superpowers/
+
+# macOS
+.DS_Store
