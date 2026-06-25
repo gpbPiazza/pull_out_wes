@@ -131,6 +131,21 @@ class TestRealMessagesFile(unittest.TestCase):
                     self.assertLess(len(item), 2000, "Discord 2000-char cap")
         walk(self.msgs)
 
+    def test_no_shell_metacharacters(self):
+        forbidden = ("$", "`", "\\")
+        def walk(obj, path=""):
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    walk(v, f"{path}/{k}")
+            elif isinstance(obj, list):
+                for i, item in enumerate(obj):
+                    walk(item, f"{path}[{i}]")
+            elif isinstance(obj, str):
+                for ch in forbidden:
+                    self.assertNotIn(ch, obj,
+                        f"shell metacharacter {ch!r} in {path}: {obj!r}")
+        walk(self.msgs)
+
     def test_pick_message_works_against_real_file(self):
         # Smoke test: today's pick returns a non-empty string.
         from datetime import date
