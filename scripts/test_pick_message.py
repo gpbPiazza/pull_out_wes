@@ -101,5 +101,43 @@ class TestPickMessage(unittest.TestCase):
         self.assertEqual((i2 - i1) % len(self.msgs["odd"]), 2)
 
 
+import json
+from pathlib import Path
+
+
+class TestRealMessagesFile(unittest.TestCase):
+    def setUp(self):
+        repo_root = Path(__file__).resolve().parent.parent
+        with (repo_root / "messages" / "messages.json").open(encoding="utf-8") as f:
+            self.msgs = json.load(f)
+
+    def test_pool_counts(self):
+        self.assertEqual(len(self.msgs["odd"]), 50)
+        self.assertEqual(len(self.msgs["even"]), 50)
+        self.assertEqual(len(self.msgs["monday"]), 20)
+        for key in ("ano_novo", "trabalhador", "namorados",
+                    "finados", "natal", "reveillon", "sexta_13"):
+            self.assertEqual(len(self.msgs["holidays"][key]), 3, key)
+
+    def test_all_messages_are_non_empty_strings(self):
+        def walk(obj):
+            if isinstance(obj, dict):
+                for v in obj.values():
+                    walk(v)
+            elif isinstance(obj, list):
+                for item in obj:
+                    self.assertIsInstance(item, str)
+                    self.assertTrue(item.strip(), "empty message")
+                    self.assertLess(len(item), 2000, "Discord 2000-char cap")
+        walk(self.msgs)
+
+    def test_pick_message_works_against_real_file(self):
+        # Smoke test: today's pick returns a non-empty string.
+        from datetime import date
+        msg = pick_message(date(2026, 6, 25), self.msgs)
+        self.assertIsInstance(msg, str)
+        self.assertTrue(msg.strip())
+
+
 if __name__ == "__main__":
     unittest.main()
